@@ -13,19 +13,24 @@ const {
 router
   .route('/')
   .get(getAllThought)
-  .post(createThought)
+
 
 // /api/thoughts/:id
 router
   .route('/:id')
+  .post(createThought)
   .get(getThoughtById)
   .put(updateThought)
   .delete(deleteThought);
 
-// /api/thoughts/:thoughtID/reactions
+// /api/thoughts/:thoughtId/reactions
 router  
-  .route('/:thoughtID/reactions')
+  .route('/:thoughtId/reactions')
   .post(createReaction)
+
+  
+router
+  .route(':/thoughtId/reactions/:reactionId')
   .delete(deleteReaction);
 
 

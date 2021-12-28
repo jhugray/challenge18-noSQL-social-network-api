@@ -10,6 +10,7 @@ const { Thought, User } = require('../models');
       select: "-__v",
     })
     .select("-__v")
+    .sort({ _id: -1 })
     .then(dbThoughtData => res.json(dbThoughtData))
     .catch(err => {
       console.log(err);
@@ -32,11 +33,11 @@ const { Thought, User } = require('../models');
       res.status(400).json(err);
     });
    },
-   createThought({ body }, res) {
-    Thought.create(body)
+   createThought(req, res) {
+    Thought.create(req.body)
     .then(({ _id }) => {
       return User.findOneAndUpdate(
-        { _id: params.userID },
+        { _id: req.params.id },
         { $push: { thoughts: _id } },
         { new: true }
       );
@@ -62,14 +63,14 @@ const { Thought, User } = require('../models');
       .catch(err => res.status(400).json(err));
   },
    deleteThought({ params }, res) {
-    Thought.findOneAndDelete({ _id: params.thoughtID })
+    Thought.findOneAndDelete({ _id: params.thoughtId })
     .then(deletedThought => {
       if (!deletedThought) {
         return res.status(404).json({ message: 'No thought with this id!' });
       }
       return User.findOneAndUpdate(
         { _id: params.userId },
-        { $pull: { thoughts: params.thoughtID } },
+        { $pull: { thoughts: params.thoughtId } },
         { new: true }
       );
     })
@@ -84,7 +85,7 @@ const { Thought, User } = require('../models');
   },
    createReaction({ params, body }, res) {
     Thought.findOneAndUpdate(
-      { _id: params.thoughtID},  
+      { _id: params.thoughtId},  
       { $push: { reactions: body } }, 
       { new: true })
     .then(dbUserData => {
@@ -98,8 +99,8 @@ const { Thought, User } = require('../models');
   },
    deleteReaction({ params }, res) {
     Thought.findOneAndUpdate(
-      { _id: params.thoughtID },
-      { $pull: { reactions: { reactionId: params.reactionID } } },
+      { _id: params.thoughtId },
+      { $pull: { reactions: { reactionId: params.reactionId } } },
       { new: true }
       )
       .then(dbUserData => res.json(dbUserData))
