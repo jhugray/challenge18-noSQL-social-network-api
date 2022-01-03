@@ -33,6 +33,7 @@ const { Thought, User } = require('../models');
       res.status(400).json(err);
     });
    },
+   //create a new thought
    createThought(req, res) {
     Thought.create(req.body)
     .then(({ _id }) => {
@@ -51,6 +52,7 @@ const { Thought, User } = require('../models');
     })
     .catch(err => res.json(err));
   },
+  //update a thought
    updateThought({ params, body }, res) {
     Thought.findOneAndUpdate({ _id: params.id }, body, { new: true })
       .then(dbThoughtData => {
@@ -62,6 +64,7 @@ const { Thought, User } = require('../models');
       })
       .catch(err => res.status(400).json(err));
   },
+  //delete a thought
   deleteThought({ params }, res) {
     Thought.findOneAndDelete({ _id: params.id })
       .then(dbThoughtData => {
@@ -73,6 +76,7 @@ const { Thought, User } = require('../models');
       })
       .catch(err => res.status(400).json(err));
   },
+  //add a reaction to a thought
    createReaction({ params, body }, res) {
     Thought.findOneAndUpdate(
       { _id: params.thoughtId},  
@@ -87,6 +91,7 @@ const { Thought, User } = require('../models');
     })
     .catch(err => res.json(err));
   },
+  //delete a reaction
    deleteReaction({ params }, res) {
     Thought.findOneAndUpdate(
       { _id: params.thoughtId },

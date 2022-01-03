@@ -1,7 +1,7 @@
 const { User, Thought } = require('../models');
 
 const userController = {
-
+//get all users
   getAllUser(req, res) {
     User.find({})
     .populate({
@@ -20,11 +20,16 @@ const userController = {
       res.status(400).json(err);
     });
   },
+  //gets a user by ID
   getUserById({ params }, res) {
     User.findOne({ _id: params.id })
       .populate({
         path: 'thoughts',
         select: '-__v'
+      })
+      .populate({
+        path: "friends",
+        select: "-__v",
       })
       .select('-__v')
       .then(dbUserData => {
@@ -39,11 +44,13 @@ const userController = {
         res.status(400).json(err);
       });
   },
+  //add a user
   createUser({ body }, res) {
     User.create(body)
       .then(dbUserData => res.json(dbUserData))
       .catch(err => res.status(400).json(err));
   },
+  //update a user
   updateUser({ params, body }, res) {
     User.findOneAndUpdate({ _id: params.id }, body, { new: true })
       .then(dbUserData => {
@@ -55,6 +62,7 @@ const userController = {
       })
       .catch(err => res.status(400).json(err));
   },
+  //delete a user
   deleteUser({ params }, res) {
     User.findOneAndDelete({ _id: params.id })
       .then(dbUserData => {
@@ -66,6 +74,7 @@ const userController = {
       })
       .catch(err => res.status(400).json(err));
   },
+  //create a friend
   createFriend({ params }, res) {
     // res.status(500).json(params)
     User.findOneAndUpdate(
@@ -86,6 +95,7 @@ const userController = {
     })
     .catch(err => res.json(err));
   },
+  //delete a friend
   deleteFriend({ params }, res) {
     User.findOneAndUpdate(
       { _id: params.userId },
@@ -102,9 +112,6 @@ const userController = {
     .catch(err => res.status(400).json(err));
   }
 }
-
-
-
 
 
 module.exports = userController;
