@@ -30,7 +30,7 @@ router
 
   
 router
-  .route(':/thoughtId/reactions/:reactionId')
+  .route('/:thoughtId/reactions/:reactionId')
   .delete(deleteReaction);
 
 
